@@ -1,0 +1,2296 @@
+{
+  "name": "LinkedIn: Article-Comment Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3344,
+        -192
+      ],
+      "id": "bb5a399e-98e9-416e-a3c2-001d4236ef83",
+      "name": "When chat message received",
+      "webhookId": "WEBHOOK_ID_CHAT_TRIGGER"
+    },
+    {
+      "parameters": {
+        "content": "# LinkedIn: Latest News Generator\nThis workflow will generate 10 current news in AI and ML and rank them accordingly.",
+        "height": 128,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4016,
+        -304
+      ],
+      "id": "e00467ba-982a-4c86-96b3-4f35698ed0cb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# LinkedIn: Article Generator\nThis workflow will generate 1 current news in AI and ML and produce 3 images for imspirational purposes.",
+        "height": 128,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4016,
+        544
+      ],
+      "id": "913494b3-a101-44a1-9ae5-dcff923bc53b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# LinkedIn: Comment Generator\nThis workflow will generate 1 comment related to a post that has been created by another member. ",
+        "height": 128,
+        "width": 560
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4016,
+        1584
+      ],
+      "id": "00eddaa6-eca0-41c4-bea8-1922f44975e9",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -2976,
+        2128
+      ],
+      "id": "7e2b0833-52b1-467a-af81-673d0ff1e8e6",
+      "name": "CG-Claude 4 Sonnet1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=News Feed: {{ $json['Submitted News Feed:'] }}\nInput: {{ $json['My Input if Any:'] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# **System Prompt: AG Agent — AI Story Generator**\n\n## **Date**\n{{ $now }}\n\n## **Role**\nYou are the **Article Generator (AG) Agent**, a workplace-focused AI content creator.  \nYour task is to generate two outputs for a **single user-provided topic**:\n\n1. A **500+ word emotionally resonant story-driven article**  \n2. A **short, professional comment-style paragraph** to accompany or preview the story\n\nYou always begin by instructing the **Web Intelligence Research Agent (WI RA)** to conduct topic-specific research.\n\n---\n\n## **Input Fields**\nTrigger: On Form Submission  \n\n- News Feed: `{{ $json['Submitted News Feed:'] }}`  \n- User Thoughts: `{{ $json['My Input if Any:'] }}`  \n\nThe **News Feed** provides the article or topic.  \nThe **User Thoughts** field contains optional context or perspective that must be woven into the output when provided.\n\n---\n\n## **Workflow**\n1. Receive a single topic prompt from the user (e.g., \"Broadcom's new AI chip\").\n2. Instruct the **WI Research Agent** to research the topic and return contextual insights with workplace relevance.\n3. Use those insights to write:\n   - A compelling, article-length post using the AC storytelling model (≥500 words)\n   - A concise comment-style summary paragraph with a professional tone\n4. Structure your output using the specified format below for proper downstream processing.\n\n---\n\n## **AG Pillars (Must Be Present in Every Article)**\n\n### **Educate**\n- Explain the concept clearly and concretely.\n- Anchor insights in the news item and workplace relevance.\n\n### **Inspire**\n- Paint a picture of what's possible — for leaders, teams, or industries.\n- Highlight change, opportunity, or meaningful evolution.\n\n### **Entertain**\n- Use personality, story, humour, or surprise.\n- Engage the reader emotionally — not just intellectually.\n\n---\n\n## **Story Format (Main Article)**\n\nUse this three-part narrative arc:\n\n### **1. Sarcastic or Cynical Hook**\n- Start with a workplace frustration or scepticism\n- Use wit, dry humour, or irony to grab attention\n\n### **2. Reversal Narrative (Core Story)**\n- Reframe the issue using the selected news topic\n- Provide real workplace insight, value, and transformation\n- Must reflect the AC Pillars above\n\n### **3. Funny or Reflective Close**\n- End with humour, optimism, or a relatable human moment\n\n### **Call-to-Action**\n- Include **exactly one** of the following CTA lines:\n\n```text\nLike this post? Drop a comment or DM. If you want more practical AI-at-work briefs like this, hit Follow or connect for regular updates.\nWas this useful? Say hi in the comments or DM—and follow or connect for more no-fluff AI-at-work posts.\nIf this sparked ideas, comment or DM. For weekly, actionable AI-at-work breakdowns, follow or connect.\nComment or DM your takeaway—then follow or connect for more.\nQuestions about applying this? Comment or DM, and follow or connect for ongoing, practical playbooks.\n```\n\n---\n\n## **Comment-Style Summary (Professional Paragraph)**\n\nWrite a short, polished summary of the main article (2—3 sentences) that:\n\n- Clearly states the article's key message or insight  \n- Sounds professional and comment-ready (e.g., for LinkedIn or email)  \n- Ends with the following line:\n\n```text\nIf you'd like to connect or DM me to discuss this further, feel free — always happy to share ideas.\n```\n\n---\n\n## **CRITICAL: Output Structure**\n\n**You MUST structure your final output using these exact section markers for proper processing:**\n\n```\nTITLE: [Your compelling article title - should be engaging and clickable]\n\nDATE: [Current date in MM/DD/YYYY format]\n\nINTRODUCTION: [Your sarcastic/cynical hook and opening paragraph(s) - this sets the tone and draws readers in]\n\nMAIN BODY: [The complete reversal narrative with core insights, workplace relevance, and the bulk of your story - this should be 400+ words and include all your key points, examples, and the transformation from cynicism to insight]\n\nSUMMARY: [Your funny/reflective close with CTA, followed by the comment-style summary paragraph - this wraps up the story and provides the shortened version]\n```\n\n**Important Notes:**\n- Each section marker (TITLE:, DATE:, etc.) must start on a new line\n- Do NOT include any other formatting or markdown\n- The MAIN BODY should contain the majority of your 500+ word content\n- The SUMMARY should include both your article conclusion AND the separate comment-style paragraph\n\n---\n\n## **Tone & Style**\n- Speak directly to the professional reader (\"you\")\n- Be clear, confident, warm, and intelligent\n- Avoid jargon unless explained simply\n- Use vivid, workplace-relevant storytelling\n- Blend emotional insight with business relevance\n\n---\n\n## **Output Rules**\n- Output must follow the exact structure format above\n- Total content should be 500+ words (primarily in MAIN BODY section)\n- Output must be **plain text only** — no Markdown, no additional formatting\n- Do not include system behaviour notes or meta-commentary\n- All content will be automatically processed and sent to Google Docs\n\n---\n\n## **Tools**\n- **AG-WI Research Agent** — Use this tool first to gather contextual, workplace-relevant research on the selected topic\n\n---\n\n## **Example Output Structure:**\n```\nTITLE: The AI Chip That's Making Everyone Nervous (And Why That's Actually Good)\n\nDATE: 08/15/2025\n\nINTRODUCTION: Another day, another \"revolutionary\" AI chip announcement. Because apparently what we needed in 2025 was more ways for technology to outpace our ability to understand it, let alone manage it responsibly in the workplace.\n\nMAIN BODY: [Your complete story with workplace insights, examples, transformation from cynicism to valuable insight - 400+ words]\n\nSUMMARY: [Your reflective close with CTA] \n\n[Comment paragraph] If you'd like to connect or DM me to discuss this further, feel free — always happy to share ideas.\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -3008,
+        768
+      ],
+      "id": "b99238fc-0d0f-4d33-8d7f-6708ae2cd33d",
+      "name": "AG Agent"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "https://docs.google.com/document/d/14r_2-G9witxOgPBWnK2U98aYNHK3kCo4ZtyUfWsfZbE/edit?tab=t.0",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -1888,
+        960
+      ],
+      "id": "8a299591-5adb-4d3f-85c9-54e483c4ca79",
+      "name": "LinkedIn: Article Generator",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "GOOGLE_DOCS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e757c157-74ff-4477-872f-1131643626dd",
+              "name": "Prompt 1",
+              "value": "={{ $json.message.content.split('VERSION 1:')[1].split('VERSION 2:')[0].trim()}}",
+              "type": "string"
+            },
+            {
+              "id": "59630094-46ad-40ae-9ed9-92428da2244f",
+              "name": "Prompt 2",
+              "value": "={{ $json.message.content.split('VERSION 2:')[1].split('VERSION 3:')[0].trim()}}",
+              "type": "string"
+            },
+            {
+              "id": "9c0d7b2f-0ef7-4233-89f4-0de92fb67203",
+              "name": "Prompt 3",
+              "value": "={{ $json.message.content.split('VERSION 3:')[1].trim()}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1264,
+        960
+      ],
+      "id": "54868655-1acb-4a02-ae66-0b3441dd4387",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json['Prompt 1'] }}",
+        "options": {
+          "dalleQuality": "hd",
+          "size": "1024x1024",
+          "style": "vivid",
+          "returnImageUrls": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1024,
+        736
+      ],
+      "id": "4a4e0b0e-95b9-427d-977a-03055c5bd6ef",
+      "name": "Image 1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json['Prompt 2'] }}",
+        "options": {
+          "dalleQuality": "hd",
+          "size": "1792x1024",
+          "style": "vivid",
+          "returnImageUrls": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1024,
+        960
+      ],
+      "id": "85147574-e343-4d87-8cdd-308c463e97a9",
+      "name": "Image 2",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "={{ $json['Prompt 3'] }}",
+        "options": {
+          "dalleQuality": "hd",
+          "size": "1024x1792",
+          "style": "vivid",
+          "returnImageUrls": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1024,
+        1184
+      ],
+      "id": "04155cb1-53eb-497c-8496-58ff37d31b0b",
+      "name": "Image 3",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# System Prompt: AG Agent → Image Prompt Generator\n\nRole: Convert a short article or post (from Google Docs) into exactly 3 distinct AI image prompts optimized for social content.\n\nGuidelines:\n- Return exactly 3 prompts, nothing else.\n- Each prompt should be self-contained (no references like “as above”).\n- Avoid brand names/logos and any real trademarks; use generic signage.\n- No text overlays in the image; no watermarks.\n- Make prompts concrete: subject, scene, composition, lighting, style, lens/camera, mood, aspect ratio.\n- Map to AG pillars:\n  1) Educate: infrastructure / factual context\n  2) Inspire: human + workplace future\n  3) Entertain: conceptual/metaphorical visual\n\nUser's concept: {{ $json.documentId }}\n\nReturn your response in this exact format:\nVERSION 1: [detailed prompt 1]\nVERSION 2: [detailed prompt 2]\nVERSION 3: [detailed prompt 3]"
+            },
+            {
+              "content": "={{ $json.documentId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1680,
+        960
+      ],
+      "id": "8d1d4bb2-5258-438f-a0b5-941dd24ef081",
+      "name": "Image Generator",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1ChzY7w4QhspAuDwRPF94zncOPwFpmXNF",
+          "mode": "list",
+          "cachedResultName": "LinkedIn Image Generator",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1ChzY7w4QhspAuDwRPF94zncOPwFpmXNF"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -816,
+        960
+      ],
+      "id": "4a885cda-3191-4d00-ac66-77486768c9e5",
+      "name": "Upload  - LinkedIn Image Generator",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GOOGLE_DRIVE_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean markdown-like formatting AND normalize section headers for the parser\n// Format so each section marker is on its own line, one blank line between sections,\n// and content directly follows the marker.\n\nconst rawText = $json[\"output\"] || $json[\"text\"] || \"\";\n\n// ---- helpers ----\nfunction cleanMarkdown(text) {\n  // Convert Markdown headers like \"# Heading\" to plain lines\n  text = text.replace(/^(#+)\\s*(.+)/gm, (_, __, title) => title);\n\n  // Strip bold/italic markers\n  text = text.replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, '$1');\n\n  // Strip inline code markers\n  text = text.replace(/`([^`]+)`/g, '$1');\n\n  // Normalize bullet points\n  text = text.replace(/^[-*+]\\s+/gm, '- ');\n\n  // Collapse excessive newlines\n  text = text.replace(/\\n{3,}/g, '\\n\\n');\n\n  return text.trim();\n}\n\nfunction normalizeHeaders(text) {\n  // Normalize case and spacing\n  text = text.replace(/^\\s*title\\s*:\\s*/gim, 'TITLE:\\n');\n  text = text.replace(/^\\s*date\\s*:\\s*/gim, 'DATE:\\n');\n  text = text.replace(/^\\s*intro(?:duction)?\\s*:\\s*/gim, 'INTRODUCTION:\\n');\n  text = text.replace(/^\\s*main\\s*[-_ ]*\\s*body\\s*:\\s*/gim, 'MAIN BODY:\\n');\n  text = text.replace(/^\\s*summary\\s*:\\s*/gim, 'SUMMARY:\\n');\n\n  return text;\n}\n\nfunction formatSections(text) {\n  // Ensure a blank line before each section (except first one)\n  text = text.replace(/(TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)/g, '\\n$1');\n\n  // Remove multiple blank lines between section marker and its content\n  text = text.replace(/(TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\n{2,}/g, '$1\\n');\n\n  // Trim leading/trailing whitespace\n  return text.trim();\n}\n\n// ---- run ----\nlet text = cleanMarkdown(rawText);\ntext = normalizeHeaders(text);\ntext = formatSections(text);\n\nreturn [{ json: { text } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2128,
+        768
+      ],
+      "id": "43aeba3f-fc49-4b7a-b1a5-49147e9d13b2",
+      "name": "AG-Eliminate Markdown"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ",
+          "mode": "list",
+          "cachedResultName": "Published LinkedIn Newsletter",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "News Feed:": "={{ $json['Submitted News Feed:'] }}",
+            "Date:": "={{ $json['Date:'] }}",
+            "Title:": "={{ $json.TITLE }}",
+            "Summary:": "={{ $json.SUMMARY }}",
+            "Introduction:": "={{ $json.INTRODUCTION }}",
+            "Main Body:": "={{ $json['MAIN BODY'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date:",
+              "displayName": "Date:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "News Feed:",
+              "displayName": "News Feed:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Title:",
+              "displayName": "Title:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Introduction:",
+              "displayName": "Introduction:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Main Body:",
+              "displayName": "Main Body:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Summary:",
+              "displayName": "Summary:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1328,
+        560
+      ],
+      "id": "9f8cabf4-161d-4f1d-a444-1106c02d67ac",
+      "name": "LinkedIn: Article",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// === Parse Article Content (n8n Code node) ===\n// Input source: always read from \"Eliminate Markdown\"\nconst articleText =\n  ($items('AG-Eliminate Markdown')?.[0]?.json?.text) ||\n  $json?.text || $json?.output || '';\n\n/* ================= Utilities ================= */\nfunction normalize(text) {\n  return (text || '')\n    .replace(/\\uFEFF/g, '')     // strip BOM\n    .replace(/\\r\\n?/g, '\\n')    // unify line endings\n    .trim();\n}\n\nfunction safeTrim(s) {\n  return (s || '').trim();\n}\n\n/* ============== Structured Parsing ============== */\nfunction parseStructuredArticle(text) {\n  // Expect exact markers (any case), but tolerate extra whitespace:\n  // TITLE:, DATE:, INTRODUCTION:, MAIN BODY:, SUMMARY:\n  const t = normalize(text);\n\n  const titleMatch = t.match(/^\\s*TITLE:\\s*([\\s\\S]*?)(?=\\n(?:TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\s*|$)/im);\n  const dateMatch  = t.match(/^\\s*DATE:\\s*([\\s\\S]*?)(?=\\n(?:TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\s*|$)/im);\n  const introMatch = t.match(/^\\s*INTRODUCTION:\\s*([\\s\\S]*?)(?=\\n(?:TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\s*|$)/im);\n  const mainMatch  = t.match(/^\\s*MAIN\\s*BODY:\\s*([\\s\\S]*?)(?=\\n(?:TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\s*|$)/im);\n  // Capture SUMMARY to end-of-file\n  const summaryMatch = t.match(/^\\s*SUMMARY:\\s*([\\s\\S]*)$/im);\n\n  const sections = {\n    title:        safeTrim(titleMatch?.[1]) || 'Generated Article',\n    date:         safeTrim(dateMatch?.[1])  || new Date().toLocaleDateString('en-US'),\n    introduction: safeTrim(introMatch?.[1]) || '',\n    mainBody:     safeTrim(mainMatch?.[1])  || '',\n    summary:      safeTrim(summaryMatch?.[1]) || ''\n  };\n\n  // Safety fallback if SUMMARY exists but empty: use last paragraph of main/introduction\n  if (!sections.summary) {\n    const base = sections.mainBody || sections.introduction || '';\n    const lastPara = base.split(/\\n{2,}/).pop()?.trim();\n    sections.summary = lastPara || 'No summary provided.';\n  }\n\n  return sections;\n}\n\n/* ============== Unstructured Fallback ============== */\nfunction parseUnstructuredArticle(text) {\n  const t = normalize(text);\n  const lines = t.split('\\n').map(l => l.trim()).filter(Boolean);\n\n  // Title: first substantial line\n  let title = lines.find(l => l.length > 20) || lines[0] || 'Generated Article';\n\n  // Date: look for common patterns in first ~5 lines\n  let date = new Date().toLocaleDateString('en-US');\n  const datePattern = /(\\d{1,2}[\\/\\-]\\d{1,2}[\\/\\-]\\d{2,4}|\\d{4}[\\/\\-]\\d{1,2}[\\/\\-]\\d{1,2}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\\s+\\d{1,2},?\\s+\\d{4})/i;\n  for (let i = 0; i < Math.min(5, lines.length); i++) {\n    const m = lines[i].match(datePattern);\n    if (m) { date = m[0]; break; }\n  }\n\n  // Remove title line from body if it matches\n  const startIdx = Math.max(lines.indexOf(title) + 1, 1);\n  const remaining = lines.slice(startIdx).join('\\n');\n  const paras = remaining.split(/\\n{2,}/).map(p => p.trim()).filter(Boolean);\n\n  let introduction = '';\n  let mainBody = '';\n  let summary = '';\n\n  if (paras.length === 0) {\n    introduction = remaining || 'Article introduction';\n    summary = 'No summary provided.';\n  } else if (paras.length === 1) {\n    introduction = paras[0];\n    summary = paras[0].split('. ').slice(-2).join('. ').trim();\n  } else if (paras.length === 2) {\n    introduction = paras[0];\n    summary = paras[1];\n  } else if (paras.length === 3) {\n    introduction = paras[0];\n    mainBody = paras[1];\n    summary = paras[2];\n  } else {\n    introduction = paras[0];\n    mainBody = paras.slice(1, -1).join('\\n\\n');\n    summary = paras[paras.length - 1];\n  }\n\n  // If mainBody is empty but intro is long, split it\n  if (!mainBody && introduction.length > 300) {\n    const sent = introduction.split(/(?<=\\.)\\s+/);\n    if (sent.length > 3) {\n      introduction = sent.slice(0, 2).join(' ');\n      mainBody = sent.slice(2).join(' ');\n    }\n  }\n\n  return {\n    title: title || 'Generated Article',\n    date,\n    introduction: introduction || 'Article introduction',\n    mainBody: mainBody || introduction,\n    summary: summary || 'No summary provided.'\n  };\n}\n\n/* ================= Main ================= */\ntry {\n  const text = normalize(articleText);\n\n  if (!text) {\n    // Hard fallback to prevent node failure\n    return [{\n      json: {\n        \"Prompt 1\": \"Generated Article\",\n        \"Prompt 2\": new Date().toLocaleDateString('en-US'),\n        \"Prompt 3\": \"Article content processing encountered an issue.\",\n        \"Prompt 4\": \"Content not available\",\n        \"Prompt 5\": \"Please review the original content and try again.\"\n      }\n    }];\n  }\n\n  // Detect any section markers to choose parser\n  const hasMarkers = /\\b(TITLE:|DATE:|INTRODUCTION:|MAIN\\s*BODY:|SUMMARY:)/i.test(text);\n  const parsed = hasMarkers ? parseStructuredArticle(text) : parseUnstructuredArticle(text);\n\n  return [{\n    json: {\n      \"TITLE\": parsed.title,\n      \"DATE\": parsed.date,\n      \"INTRODUCTION\": parsed.introduction,\n      \"MAIN BODY\": parsed.mainBody,\n      \"SUMMARY\": parsed.summary\n    }\n  }];\n} catch (err) {\n  // Final safety: never throw\n  return [{\n    json: {\n      \"Prompt 1\": \"Generated Article\",\n      \"Prompt 2\": new Date().toLocaleDateString('en-US'),\n      \"Prompt 3\": \"Article content processing encountered an issue.\",\n      \"Prompt 4\": articleText || \"Content not available\",\n      \"Prompt 5\": \"Please review the original content and try again.\"\n    }\n  }];\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1888,
+        656
+      ],
+      "id": "a4694ca3-47f9-4d91-b062-2b265f8053cb",
+      "name": "Parse Article Content"
+    },
+    {
+      "parameters": {
+        "text": "=## **Purpose**\nRequest detailed, workplace-relevant insights on a **specific topic** in AI, ML, or data science.  \nThis mode is used when a deeper narrative or article (e.g., for LinkedIn) is being created by the AG Agent.\n\n---\n\n## **Instructions**\nYou are being asked to operate in **Targeted Insight Mode**.  \nYour task is to deliver **1–3 clear, plain-text paragraphs** explaining the topic from multiple angles.\n\n---\n\n## **What to Include**\n- Definitions or background context (from sources like AG-Wikipedia)\n- Technical or workplace relevance (from AG-SerpAPI, AG-Tavily, AG-Perplexity)\n- Community sentiment or use cases (from AG-Hacker News)\n- Any emotional, ethical, or strategic implications\n- All insights must be up-to-date and workplace-aware\n\n---\n\n## **Tone**\n- Clear, neutral, and analytical\n- No hype — focus on practical, human, or strategic workplace relevance\n- Plain text only (no formatting)\n\n---\n\n## **Style**\n- Speak to an intelligent, professional audience\n- Clarify jargon where necessary\n- Use full sentences, not bullet points\n\n---\n\n## **Response Format**\nReturn:\n- 1–3 paragraphs of plain-text insight\n- Use source variety to create a cohesive narrative\n- Avoid summarising unrelated news\n\n---\n\n## **Output Target**\nYour response will be used by the **AG Agent** to write a full LinkedIn-style article.  \nMake it rich enough for story development, but concise enough for article adaptation.\n\n---\n\n## **Example Prompt**\n> Topic: “AI in drug discovery”\n\n---\n\n",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# **System Prompt: AG-WI Research Agent — Targeted Insight Mode**\n\n## **Date**\n{{ $now }}\n\n## **Role**\nYou are the **AG-WI Research Agent**, specialising in artificial intelligence, machine learning, and data science.  \nYour task is to provide **deep, contextual insight** on a **single topic**, typically selected for article development by the **AG Agent**.\n\nYou do not generate news roundups. You only respond to **Targeted Insight** requests.\n\n---\n\n## **Workflow**\n1. Receive a single **topic** from the AG Agent or user (e.g., \"Broadcom’s new AI chip\", \"AI in healthcare ethics\").\n2. Conduct broad, cross-source research using all relevant tools listed below.\n3. Return a **plain-text response (1–3 paragraphs)** explaining the topic’s context, challenges, workplace relevance, and implications.\n\n---\n\n## **Tools & How to Use Them**\n- **AG-Wikipedia** — Use for definitions, foundational background, and history.\n- **AG-Perplexity** — Use for fresh, cited analysis and expert commentary.\n- **AG-Tavily** — Use for specialised, industry-specific news or emerging developments.\n- **AG-SerpAPI** — Use to source general web coverage and news clusters.\n- **AG-Hacker News** — Use for technical sentiment and developer insight.\n- **AG-Claude 4 Sonnet** — Use to help synthesise and narrate a cohesive workplace-relevant story.\n\n---\n\n## **Output Requirements**\n- Write in **plain text only** — no Markdown, no formatting\n- Output must be **1 to 3 coherent paragraphs**\n- Each paragraph should build the topic insightfully:\n  - **Explain the concept or news item**\n  - **Clarify its impact on professionals or industry**\n  - **Highlight any technical, ethical, or strategic implications**\n- Maintain a unified narrative — avoid simply stacking facts\n\n---\n\n## **Tone & Style**\n- Clear, analytical, and professionally neutral\n- Avoid marketing language or excessive abstraction\n- Clarify any technical jargon for a non-technical but informed audience\n\n---\n\n## **Output Target**\nYour response will be used directly by the **AG Agent** to write a full LinkedIn-style article.  \nMake the insight strong enough to anchor an engaging, workplace-relevant story.\n\n---\n\n## **Success Criteria**\n- The topic is explained clearly and practically\n- Multiple sources contribute to a single cohesive explanation\n- The content is directly relevant to workplace readers\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        -2816,
+        992
+      ],
+      "id": "a28bdf5c-06a6-426b-a7c2-b3e713edd901",
+      "name": "AG-WI Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -2944,
+        992
+      ],
+      "id": "dda10602-c67d-4ad1-9c52-60bdc355a90e",
+      "name": "AG-Claude 4 Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -2992,
+        1200
+      ],
+      "id": "e32556ab-2b99-4ded-a4ff-50b98512164d",
+      "name": "AG-WI Claude 4 Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "options": {
+          "topic": "general",
+          "search_depth": "advanced",
+          "max_results": 5
+        }
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        -2864,
+        1200
+      ],
+      "id": "ee7886af-73e1-4b68-88a5-d721ffc64d5b",
+      "name": "AG-Tavily",
+      "credentials": {
+        "tavilyApi": {
+          "id": "TAVILY_API_CREDENTIAL_ID",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -2736,
+        1200
+      ],
+      "id": "a2c65cd8-3279-455f-b0fb-3bd838f63fc4",
+      "name": "AG-Wikipedia"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -2608,
+        1200
+      ],
+      "id": "d701e8eb-434c-43a5-85da-2f277ee60d6f",
+      "name": "AG-SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "SERPAPI_CREDENTIAL_ID",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "all",
+        "limit": 5,
+        "additionalFields": {
+          "keyword": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Keyword', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        -2480,
+        1200
+      ],
+      "id": "e0e2c843-8503-46d4-b9d8-566146e616fe",
+      "name": "AG-Hacker News"
+    },
+    {
+      "parameters": {
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        -2352,
+        1200
+      ],
+      "id": "507e0e00-2b97-4ab2-ac78-addcfd4af5a9",
+      "name": "AG-Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "PERPLEXITY_API_CREDENTIAL_ID",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Latest News - Article",
+        "formDescription": "Article Description: Generate an article from a the Latest News",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Submitted News Feed:",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "My Input if Any:",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date:",
+              "fieldType": "date"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -3328,
+        656
+      ],
+      "id": "2b58966e-2cfb-4cd0-8d8c-e1b44da0bee0",
+      "name": "Article Generator",
+      "webhookId": "WEBHOOK_ID_ARTICLE_GENERATOR"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 944,
+        "width": 2736,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        1568
+      ],
+      "id": "17b2e0ba-944e-48ed-83d1-900f25c3b3f4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 912,
+        "width": 3424,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        528
+      ],
+      "id": "1f628bb5-e49f-491d-a353-b33840dd3868",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "https://docs.google.com/document/d/1VqHnlo7CJA2BplH173MqmEKnz7TaEsBkKb6qziPJk1Y/edit?tab=t.0",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -1952,
+        2000
+      ],
+      "id": "6c96e64c-a94f-473c-81a8-7f59df7d5cc9",
+      "name": "LinkedIn: Comment Generator",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "GOOGLE_DOCS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ",
+          "mode": "list",
+          "cachedResultName": "LinkedIn",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 550586046,
+          "mode": "list",
+          "cachedResultName": "Comment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit#gid=550586046"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date:": "={{ $json['Date:'] }}",
+            "First Name:": "={{ $json['First Name:'] }}",
+            "Surname:": "={{ $json['Surname:'] }}",
+            "Article:": "={{ $json['Submitted Article:'] }}",
+            "Submitted Comment:": "={{ $json['Submitted Comment'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date:",
+              "displayName": "Date:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First Name:",
+              "displayName": "First Name:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Surname:",
+              "displayName": "Surname:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Article:",
+              "displayName": "Article:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Submitted Comment:",
+              "displayName": "Submitted Comment:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1504,
+        1616
+      ],
+      "id": "27355d53-f9a2-4603-869c-92bda6f1eb4b",
+      "name": "LinkedIn: Comment",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1728,
+        1616
+      ],
+      "id": "5df9a35c-02c5-4c8e-ace5-686623aa5f6f",
+      "name": "CG-Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1648,
+        560
+      ],
+      "id": "5f83c1ca-7175-4117-8b9a-e8c8bcddf967",
+      "name": "AG-Merge"
+    },
+    {
+      "parameters": {
+        "text": "=## Purpose\nProvide detailed, workplace-relevant insights on a specific topic in AI, ML, or data science.  \nYou are operating in support of the **Comment Generator (CG) Agent**, who will use your research to produce short-form professional content.\n\n---\n\n## Mode\nYou are operating in **Targeted Insight Mode**.  \nYour task is to generate **1–2 paragraphs** of plain-text insight with workplace value, drawing from **all available tools and data sources**.\n\n---\n\n## What to Include\nUse every available tool to construct a cohesive, multi-angle perspective:\n\n- **Definitions & Background** → Use CG-Wikipedia or structured data sources\n- **Technical or Strategic Relevance** → Use CG-SerpAPI, CG-Tavily, CG-Perplexity, or other web tools\n- **Community Sentiment or Use Cases** → Scan CG-Hacker News, Reddit, or open developer forums\n- **Ethical, Emotional, or Industry Impact** → Highlight any implications for teams, leaders, or industries\n\n---\n\n## Output Format\nReturn:\n- **1–2 plain-text paragraphs** with cohesive workplace relevance  \n- **No lists, no formatting** — only complete, natural-language sentences  \n- Focus strictly on the assigned topic (ignore unrelated news)  \n- Use sources to **build context**, not just summarize links\n\n---\n\n## Tone\n- **Clear, analytical, and neutral**\n- Prioritize **practical insights** over hype or speculation\n- Speak to **intelligent, professional readers**\n- Clarify any jargon in plain language\n\n---\n\n## Output Use\nYour content will feed directly into the **CG Agent's** LinkedIn-style micro-comment.  \nEnsure your insights are **rich enough for storytelling**, but concise enough for adaptation.\n\n---\n\n## Example Prompt\n> Topic: “AI in drug discovery”\n",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# System Prompt: WI Research Agent — Targeted Insight Mode\n\n## Role\nYou are the **Web Intelligence Research Agent**, an AI assistant specializing in artificial intelligence, machine learning, and data science.  \nYour task is to provide **deep, contextual workplace insight** on a **single topic**, requested by the **Comment Generator (CG) Agent** for short-form professional content.\n\nYou do **not** generate news summaries or trending lists. You operate exclusively in **Targeted Insight Mode**.\n\n---\n\n## Workflow\n1. Receive a single **topic** (e.g., “Broadcom’s new AI chip” or “AI in healthcare ethics”).\n2. Immediately conduct deep, cross-source research using **all mandatory tools** below.\n3. Return a **1–2 paragraph plain-text explanation** that integrates definition, relevance, and workplace implication into a cohesive narrative.\n\n---\n\n## Mandatory Tool Use\nYou **must use all of the following tools** in every request unless a tool fails to return results. Do not skip any:\n\n- **CG-Wikipedia** — For definitions, foundational context, and history  \n- **CG-Perplexity** — For current expert commentary, citations, and synthesis  \n- **CG-Tavily** — For niche or industry-specific news and insights  \n- **CG-SerpAPI** — For broader media coverage, corporate releases, and aggregated summaries  \n- **CG-Hacker News** — For developer sentiment, technical takes, or relevant discourse  \n- **CG-WI Claude 4 Sonnet** — To help synthesize a clean, narrative-style explanation\n\nIf a tool fails or returns nothing, proceed with the rest. Still produce full output using what’s available.\n\n---\n\n## Output Requirements\n- Output must be **plain text only** — no Markdown, no bullet points\n- Return **1–2 complete paragraphs**\n- Each paragraph must:\n  - Clearly explain the topic from multiple perspectives\n  - Show practical workplace impact or strategic implications\n  - Clarify any jargon for an intelligent, non-specialist audience\n- Avoid stacked facts — write a unified, narrative-style insight\n\n---\n\n## Tone & Style\n- Analytical, clear, and professionally neutral\n- Avoid technical overload, hype, or marketing spin\n- Emphasize practical relevance over abstraction\n- Write for a business-oriented, tech-aware professional audience\n\n---\n\n## Output Target\nYour insight will feed directly into the **CG Agent’s** LinkedIn-style short comment.  \nEnsure it is detailed enough to support professional storytelling in 100 words or less.\n\n---\n\n## Success Criteria\n- Topic is clearly defined and explained\n- Insight integrates multiple tools and perspectives\n- Workplace relevance is explicit and meaningful\n- Output can stand alone as a brief professional explainer\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        -2848,
+        2128
+      ],
+      "id": "feffb572-0179-4072-89fb-c2f226856828",
+      "name": "CG - WI Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -3024,
+        2336
+      ],
+      "id": "2968070e-9ffd-4a19-a87b-eea3730c8827",
+      "name": "CG-WI Claude 4 Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -2896,
+        2336
+      ],
+      "id": "d7e39ebd-9023-402d-880e-45c4091c44ed",
+      "name": "CG-Wikipedia"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -2768,
+        2336
+      ],
+      "id": "db7f6a86-0c50-4193-9040-754c6612b356",
+      "name": "CG-SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "SERPAPI_CREDENTIAL_ID",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "all",
+        "limit": 5,
+        "additionalFields": {
+          "keyword": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Keyword', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        -2640,
+        2336
+      ],
+      "id": "e3d54708-da23-4cb2-b783-0d734c079310",
+      "name": "CG-Hacker News"
+    },
+    {
+      "parameters": {
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        -2512,
+        2336
+      ],
+      "id": "185bd9d8-eca7-4594-ac01-e30f3e35b6dc",
+      "name": "CG-Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "PERPLEXITY_API_CREDENTIAL_ID",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query', ``, 'string') }}",
+        "options": {
+          "topic": "general",
+          "search_depth": "advanced",
+          "max_results": 5
+        }
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        -2384,
+        2336
+      ],
+      "id": "e270415a-7209-4230-82e3-2f083779b359",
+      "name": "CG-Tavily",
+      "credentials": {
+        "tavilyApi": {
+          "id": "TAVILY_API_CREDENTIAL_ID",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3104,
+        2128
+      ],
+      "id": "23896c46-4a64-44c8-bcca-9d2b1e3213e8",
+      "name": "CG-GPT 4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Name: {{ $json['First Name:'] }}\nSurname: {{ $json['Surname:'] }}\nArticle: {{ $json['Submitted Article:'] }}\nInput: {{ $json['My Input if Any:'] }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# System Prompt: CG Agent — AI Comment Generator (Micro Format v2)\n\n## Role\nYou are the **Comment Generator (CG) Agent**, a workplace-focused AI content creator.  \nYour task is to generate a single, 4-sentence comment on a user-provided LinkedIn post.  \nAll responses must be **100 words or fewer**, and include a personalized close.\n\nYour users submit their **first name**, a **post/article**, and optional **thoughts** to incorporate.\n\n---\n\n## Mandatory Research Protocol\n**You must call the **CG - WI Research Agent** before generating any comment.**  \nNo exceptions — always research the article before writing.  \nIf no relevant data is returned, clearly state that generation cannot proceed.\n\nUse any additional tools available when they help improve insight or precision.\n\n---\n\n## Input Fields\nTrigger: On Form Submission  \n- First Name: `{{ $json['First Name:'] }}`  \n- Surname: `{{ $json['Surname:'] }}`  \n- Article: `{{ $json['Submitted Article:'] }}`  \n- User Thoughts: `{{ $json['My Input if Any:'] }}`  \n\n---\n\n## Workflow\n1. Extract input values from the form submission.\n2. **Immediately call WI RA** to research the submitted article.\n3. Integrate relevant workplace insights + any user-provided thoughts.\n4. Address the post author **by first name**.\n5. Write a **4-sentence** comment using the format below.\n\n---\n\n## Output Format\n\n**Plain text only.** No Markdown, no meta-comments, no labels outside the boxed format.\n\n```\nTITLE: [Snappy, engaging title]\n\nINTRODUCTION: [One sarcastic or cynical sentence]\n\nMAIN BODY: [Two clear, insight-rich sentences with workplace relevance]\n\nSUMMARY: [One witty or reflective close — must end with exactly one CTA]\n```\n\n---\n\n## CTAs (Use only one)\n- `Would value your perspective—open to connect.`\n- `If this sparked ideas, comment or DM.`\n\n---\n\n## Rules\n- **Maximum 100 words**, including CTA  \n- **Exactly 4 sentences**, clearly labeled  \n- **Plain text output only**  \n- Must reflect the **CG Pillars**  \n- **WI RA must be called for every task — no exceptions**  \n- Use additional tools when appropriate  \n- Never include meta-commentary or system behavior notes  \n\n---\n\n## CG Pillars (Condensed)\n- **Educate** — Deliver a clear, workplace-relevant takeaway  \n- **Inspire** — Suggest change, potential, or opportunity  \n- **Entertain** — Add wit, surprise, or relatable emotion  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -3040,
+        1904
+      ],
+      "id": "edd1a86a-f872-425f-8091-26eba3e5baac",
+      "name": "CG Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Clean markdown-like formatting AND normalize section headers for the parser\n// Format so each section marker is on its own line, one blank line between sections,\n// and content directly follows the marker.\n\nconst rawText = $json[\"output\"] || $json[\"text\"] || \"\";\n\n// ---- helpers ----\nfunction cleanMarkdown(text) {\n  // Convert Markdown headers like \"# Heading\" to plain lines\n  text = text.replace(/^(#+)\\s*(.+)/gm, (_, __, title) => title);\n\n  // Strip bold/italic markers\n  text = text.replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, '$1');\n\n  // Strip inline code markers\n  text = text.replace(/`([^`]+)`/g, '$1');\n\n  // Normalize bullet points\n  text = text.replace(/^[-*+]\\s+/gm, '- ');\n\n  // Collapse excessive newlines\n  text = text.replace(/\\n{3,}/g, '\\n\\n');\n\n  return text.trim();\n}\n\nfunction normalizeHeaders(text) {\n  // Normalize case and spacing\n  text = text.replace(/^\\s*title\\s*:\\s*/gim, 'TITLE:\\n');\n  text = text.replace(/^\\s*date\\s*:\\s*/gim, 'DATE:\\n');\n  text = text.replace(/^\\s*intro(?:duction)?\\s*:\\s*/gim, 'INTRODUCTION:\\n');\n  text = text.replace(/^\\s*main\\s*[-_ ]*\\s*body\\s*:\\s*/gim, 'MAIN BODY:\\n');\n  text = text.replace(/^\\s*summary\\s*:\\s*/gim, 'SUMMARY:\\n');\n\n  return text;\n}\n\nfunction formatSections(text) {\n  // Ensure a blank line before each section (except first one)\n  text = text.replace(/(TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)/g, '\\n$1');\n\n  // Remove multiple blank lines between section marker and its content\n  text = text.replace(/(TITLE:|DATE:|INTRODUCTION:|MAIN BODY:|SUMMARY:)\\n{2,}/g, '$1\\n');\n\n  // Trim leading/trailing whitespace\n  return text.trim();\n}\n\n// ---- run ----\nlet text = cleanMarkdown(rawText);\ntext = normalizeHeaders(text);\ntext = formatSections(text);\n\nreturn [{ json: { text } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2176,
+        1904
+      ],
+      "id": "bb9e1b91-8add-4e85-9db1-2c0100b4d0d1",
+      "name": "CG-Eliminate Markdown"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === Parse and Format Comment Sections with Line Breaks for Sheets ===\n\nconst rawText = \n  ($items('CG-Eliminate Markdown')?.[0]?.json?.text) ||\n  $json?.text || $json?.output || '';\n\n// Extract each labeled section (naively, since structure is fixed)\nfunction extract(label) {\n  const pattern = new RegExp(`${label}:\\\\s*([\\\\s\\\\S]*?)(?=\\\\n[A-Z ]+:|$)`, 'i');\n  const match = rawText.match(pattern);\n  return (match?.[1] || '').trim();\n}\n\nconst title = extract('TITLE');\nconst intro = extract('INTRODUCTION');\nconst body = extract('MAIN BODY');\nconst summary = extract('SUMMARY');\n\n// Build a nicely formatted multi-line comment string\nconst formattedComment = \n  `TITLE: ${title}\\n` +\n  `INTRODUCTION: ${intro}\\n` +\n  `MAIN BODY: ${body}\\n` +\n  `SUMMARY: ${summary}`;\n\nreturn [{\n  json: {\n    \"Submitted Comment\": formattedComment\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1952,
+        1792
+      ],
+      "id": "a1eb1216-df02-4c59-bc9f-f216742e5067",
+      "name": "Parse Comment Content"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3072,
+        992
+      ],
+      "id": "076ee824-9702-4ccf-917c-eb1dccbc8eb1",
+      "name": "AG-GPT 4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3120,
+        1200
+      ],
+      "id": "4cd4db7f-11a4-45da-968d-7ccd83505943",
+      "name": "AG-WI-4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3152,
+        2336
+      ],
+      "id": "48e164b9-cd1f-4f7c-bc06-524e251c6f09",
+      "name": "CG-WI-4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -2784,
+        32
+      ],
+      "id": "086ff1c2-823b-4554-a277-19a6911197e2",
+      "name": "Memory"
+    },
+    {
+      "parameters": {
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# **System Prompt: News Generator Agent (NG Agent)**\n\n## **Date**\n{{ $now }}\n\n## **Role**\nYou are the **News Generator Agent**.  \nYour job is to instruct the **NG-WI Research Agent** to generate a ranked list of the **10 most timely and relevant news developments** in artificial intelligence, machine learning, and data science, with a clear workplace or industry focus.\n\nYou do not perform the research yourself.  \nYou act as the initiator, delegating to NG-WI Research Agent.\n\n---\n\n## **Workflow**\n1. Instruct the NG-WI Research Agent to enter **Daily Digest Mode**\n2. Request 10 distinct, non-overlapping news developments with strategic workplace relevance\n3. Ensure NG-WI Research Agent:\n   - Uses all available tools (e.g., NG-WI Perplexity, NG-WI Tavily, NG-WI SerpAPI)\n   - Formats in plain text (no Markdown)\n   - Sends the output to the Google Doc titled **\"LinkedIn: Latest News Generator\"**\n\n---\n\n## **Instruction to NG-WI Research Agent**\nWhen triggered, send the following prompt to NG-WI Research Agent:\n\nPlease generate the 10 most current and significant news developments in artificial intelligence, machine learning, and data science as of today.\n\nEach item should be a standalone topic with a bolded headline and a 1–2 sentence summary explaining why it matters to the workplace or industry.\n\nFormat: plain text only, numbered list, no Markdown\n\nStart with today's date\n\nEnd with a short concluding summary\n\nAppend the full output to the Google Doc titled \"LinkedIn: Latest News Generator\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        -2928,
+        -192
+      ],
+      "id": "047a182e-d3a7-46de-8e73-c9aad8e02e80",
+      "name": "NG Agent"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "https://docs.google.com/document/d/1EMBY8MjjZ3H3OXWGzD-qdDxGD__6a2s2lt4iLXv_840/edit?tab=t.0",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -1696,
+        -96
+      ],
+      "id": "ba1b95fa-43d4-4fab-8e68-97ed8aa85ace",
+      "name": "LinkedIn: Latest News Generator",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "GOOGLE_DOCS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3088,
+        32
+      ],
+      "id": "59924611-4757-497b-903b-e3d38a90d23a",
+      "name": "NG-GPT 4.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -2944,
+        32
+      ],
+      "id": "c5374613-5673-4c08-94c1-0907c9fae1f5",
+      "name": "NG-Claude 4 Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "=# Instructions\n\nPlease generate the 10 most current and significant news developments in artificial intelligence, machine learning, and data science as of today.\n\nFormat:\n- Start with today’s date\n- Use a numbered list in plain text (no Markdown formatting)\n- Each item should include a bolded headline and a 1–2 sentence summary of workplace or industry relevance\n- End with a short concluding summary of overall implications entitled **\"Conclusion:\"\"**\n- Append the result to the Google Doc titled **\"LinkedIn: Latest News Generator\"**\n",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# **System Prompt: Web Intelligence Research Agent — AI, ML, and Data Science (Daily Digest Only)**\n\n## **Date**\n{{ $now }}\n\n## **Role**\nYou are the **Web Intelligence Research Agent**.  \nYour task is to identify, synthesize, and return the **10 most current and significant news developments** in artificial intelligence, machine learning, and data science, with clear relevance to workplace and industry professionals.\n\nYou operate in a single mode:\n\n---\n\n## **Daily Digest Mode**\n\nYou must:\n- Identify and rank the **10 most impactful and timely** developments in AI/ML/Data Science from today\n- Use a variety of trusted tools and sources, including:\n  - **Perplexity** — Verified, citation-backed intelligence\n  - **SerpAPI** — General web search results\n  - **Tavily** — Curated and specialized news coverage\n  - **HackerNews** — Technical community sentiment\n  - **Wikipedia** — Background and definitional support\n  - **Claude 4 Sonnet** — Synthesis and narrative quality\n\n---\n\n## **For Each News Item**\n- Write a **concise, bolded headline**\n- Add a **1–2 sentence summary** that clearly explains why the story matters for professionals in AI, ML, or data science\n\n---\n\n## **Formatting Instructions**\n- Begin with **today’s date** (e.g., “August 14, 2025”)\n- Use this intro:  \n  *“Here are the ten most current and significant developments in artificial intelligence, machine learning, and data science as of today:”*\n- Use a **numbered list** from 1 to 10\n- End with a **1–2 sentence concluding summary** that reflects the overall implications\n- Return output as **plain text only** (no Markdown, no bullet points, no formatting)\n\n---\n\n## **Success Criteria**\n- Exactly 10 well-ranked, unique news stories\n- Each item is:\n  - Timely (as of today)\n  - Distinct from the others\n  - Clearly relevant to workplace or industry professionals\n- Output is returned as clean plain text (to be handled by the NG Agent for delivery)\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        -2656,
+        32
+      ],
+      "id": "6d9527ce-36f4-4493-84f6-d70cd7d895ad",
+      "name": "NG-WI Research Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -3024,
+        240
+      ],
+      "id": "26c9402a-4d43-4657-bf92-6818352e8a38",
+      "name": "NG-WI-4o",
+      "credentials": {
+        "openAiApi": {
+          "id": "OPENAI_API_CREDENTIAL_ID",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -2896,
+        240
+      ],
+      "id": "11c537ee-b19e-4e2d-9b89-88204fea8893",
+      "name": "NG-WI Claude 4 Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "ANTHROPIC_API_CREDENTIAL_ID",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawText = $json[\"output\"];\n\nfunction cleanMarkdown(text) {\n  // Replace Markdown headers like \"# Heading\" with \"HEADING\"\n  text = text.replace(/^(#+)\\s*(.+)/gm, (_, __, title) => title.toUpperCase());\n\n  // Remove bold/italic markers (*, **, _, __)\n  text = text.replace(/[*_]{1,2}([^*_]+)[*_]{1,2}/g, '$1');\n\n  // Remove inline code formatting\n  text = text.replace(/`([^`]+)`/g, '$1');\n\n  // Normalize bullet points\n  text = text.replace(/^[-*+]\\s+/gm, '- ');\n\n  // Collapse excessive newlines\n  text = text.replace(/\\n{3,}/g, '\\n\\n');\n\n  // Add space after capitalized headers if needed\n  text = text.replace(/([A-Z ]{5,})\\n(?!\\n)/g, '$1\\n');\n\n  return text.trim();\n}\n\nreturn [\n  {\n    json: {\n      text: cleanMarkdown(rawText)\n    }\n  }\n];\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1920,
+        -192
+      ],
+      "id": "49574247-2890-4d07-8900-03f93443a767",
+      "name": "NG-Eliminate Markdown"
+    },
+    {
+      "parameters": {
+        "jsCode": "// === Parse News Feed Digest → Single Row: Date: | 1..10 | Conclusion: ===\n// Source: NG-Eliminate Markdown\n\nconst raw =\n  ($items('NG-Eliminate Markdown')?.[0]?.json?.text) ||\n  $json?.text || $json?.output || '';\n\nfunction normalize(s) {\n  return (s || '')\n    .replace(/\\uFEFF/g, '')\n    .replace(/\\r\\n?/g, '\\n')\n    .trim();\n}\nfunction cleanLine(s) {\n  return (s || '')\n    .replace(/\\n+/g, ' ')\n    .replace(/\\s{2,}/g, ' ')\n    .trim();\n}\n\nconst text = normalize(raw);\n\n// ---- 1) Date extraction (fallback: today en-US) ----\nconst datePattern = /(?:\\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)[a-z]*\\s+\\d{1,2},\\s*\\d{4}\\b|\\b\\d{1,2}[\\/\\-]\\d{1,2}[\\/\\-]\\d{2,4}\\b|\\b\\d{4}[\\/\\-]\\d{1,2}[\\/\\-]\\d{1,2}\\b)/i;\nconst headBlock = text.split('\\n').slice(0, 5).join('\\n');\nconst dateMatch = headBlock.match(datePattern);\nconst dateOut = dateMatch ? dateMatch[0] : new Date().toLocaleDateString('en-US');\n\n// ---- 2) If explicit \"Conclusion:\" exists, split there first ----\nconst conclLabelRe = /(?:^|\\n)\\s*Conclusion\\s*:\\s*/i;\nlet beforeConclusion = text;\nlet conclusionLabeled = '';\n\nconst conclMatch = text.match(conclLabelRe);\nif (conclMatch) {\n  const idx = text.search(conclLabelRe);\n  beforeConclusion = text.slice(0, idx).trim();\n  conclusionLabeled = cleanLine(text.slice(idx).replace(conclLabelRe, ''));\n}\n\n// ---- 3) Prefer numbered list (1..10), but STOP at \"Conclusion:\" if present ----\nfunction splitNumberedBounded(t) {\n  const startIdx = t.search(/^\\s*1[).]\\s+/m);\n  const listText = startIdx >= 0 ? t.slice(startIdx) : t;\n\n  const items = [];\n  // Stop at next number, or at a Conclusion: line, or end-of-text\n  const re = /(^|\\n)\\s*(\\d{1,2})[).]\\s+([\\s\\S]*?)(?=(?:\\n\\s*\\d{1,2}[).]\\s+|\\n\\s*Conclusion\\s*:|$))/gi;\n  let m;\n  while ((m = re.exec(listText)) !== null) {\n    const body = cleanLine(m[3]);\n    if (body) items.push(body);\n  }\n  return items;\n}\n\nlet feeds = splitNumberedBounded(beforeConclusion);\n\n// ---- 4) Fallbacks if not numbered: bullets → paragraph blocks ----\nif (feeds.length === 0) {\n  // Bullets\n  const bullet = /^\\s*[-*•]\\s+/;\n  const lines = beforeConclusion.split('\\n');\n  const items = [];\n  let buf = [];\n  for (const line of lines) {\n    if (bullet.test(line)) {\n      if (buf.length) { items.push(cleanLine(buf.join(' '))); buf = []; }\n      buf.push(line.replace(bullet, '').trim());\n    } else if (line.trim()) {\n      buf.push(line.trim());\n    } else if (buf.length) {\n      items.push(cleanLine(buf.join(' '))); buf = [];\n    }\n  }\n  if (buf.length) items.push(cleanLine(buf.join(' ')));\n  feeds = items;\n}\n\nif (feeds.length === 0) {\n  // Paragraph blocks (each news feed is one paragraph)\n  feeds = beforeConclusion.split(/\\n{2,}/).map(cleanLine).filter(Boolean);\n}\n\n// ---- 5) Determine Conclusion:\n// Priority: explicit labeled conclusion; else if ≥11 paragraphs total, last is conclusion;\n// else, empty.\nlet conclusion = conclusionLabeled;\nif (!conclusion) {\n  // See if original text (without labeled split) has 11+ paragraphs\n  const paras = text.split(/\\n{2,}/).map(cleanLine).filter(Boolean);\n  if (paras.length >= 11) {\n    conclusion = paras[paras.length - 1];\n  } else {\n    // No explicit label and fewer paragraphs; leave empty\n    conclusion = '';\n  }\n}\n\n// ---- 6) Enforce exactly 10 feeds, never swallowing the conclusion ----\nfeeds = feeds.slice(0, 10);\nwhile (feeds.length < 10) feeds.push(\"\");\n\n// ---- 7) Build row for Sheets schema ----\nconst row = { \"Date:\": dateOut };\nfor (let i = 0; i < 10; i++) row[String(i + 1)] = feeds[i];\nrow[\"Conclusion:\"] = conclusion;\n\nreturn [{ json: row }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1696,
+        -288
+      ],
+      "id": "3dfe0446-b74e-4f2e-9dc2-d0bf2fa3b16f",
+      "name": "Parse News Feed Content"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ",
+          "mode": "list",
+          "cachedResultName": "LinkedIn",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1905397630,
+          "mode": "list",
+          "cachedResultName": "News Feed",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1In-EQN08yBp3PcA3R9FExvzDNCsR1JorzL3oRyv9yfQ/edit#gid=1905397630"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "1": "={{ $json['1'] }}",
+            "2": "={{ $json['2'] }}",
+            "3": "={{ $json['3'] }}",
+            "4": "={{ $json['4'] }}",
+            "5": "={{ $json['5'] }}",
+            "6": "={{ $json['6'] }}",
+            "7": "={{ $json['7'] }}",
+            "8": "={{ $json['8'] }}",
+            "9": "={{ $json['9'] }}",
+            "10": "={{ $json['10'] }}",
+            "Date:": "={{ $json['Date:'] }}",
+            "Conclusion:": "={{ $json['Conclusion:'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date:",
+              "displayName": "Date:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "1",
+              "displayName": "1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "2",
+              "displayName": "2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "3",
+              "displayName": "3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "4",
+              "displayName": "4",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "5",
+              "displayName": "5",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "6",
+              "displayName": "6",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "7",
+              "displayName": "7",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "8",
+              "displayName": "8",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "9",
+              "displayName": "9",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "10",
+              "displayName": "10",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Conclusion:",
+              "displayName": "Conclusion:",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -1472,
+        -288
+      ],
+      "id": "82f83c67-5d0a-46b2-ba6c-86fdaeb01113",
+      "name": "LinkedIn: News Feed",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "GOOGLE_SHEETS_OAUTH2_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -2752,
+        240
+      ],
+      "id": "5cfb7af1-e2e9-49d3-8c81-749149ad9693",
+      "name": "NG-Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -2592,
+        240
+      ],
+      "id": "e91a71d6-a3d1-47ac-ab56-79b5114feb9d",
+      "name": "NG-Wikipedia"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -2448,
+        240
+      ],
+      "id": "39a79a03-0a19-4108-aeee-992479883f0c",
+      "name": "NG-SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "SERPAPI_CREDENTIAL_ID",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "all",
+        "limit": 5,
+        "additionalFields": {
+          "keyword": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Keyword', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "typeVersion": 1,
+      "position": [
+        -2288,
+        240
+      ],
+      "id": "e4f87b45-d93d-4c8e-9911-10e34055ee9b",
+      "name": "NG-Hacker News"
+    },
+    {
+      "parameters": {
+        "query": "={{ $json.chatInput }}",
+        "options": {
+          "topic": "general",
+          "search_depth": "advanced",
+          "max_results": 5
+        }
+      },
+      "type": "@tavily/n8n-nodes-tavily.tavilyTool",
+      "typeVersion": 1,
+      "position": [
+        -2144,
+        240
+      ],
+      "id": "c8b7a33b-02c9-4ab2-ae45-9204ee6b0ba4",
+      "name": "NG-Tavily",
+      "credentials": {
+        "tavilyApi": {
+          "id": "TAVILY_API_CREDENTIAL_ID",
+          "name": "Tavily account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "sonar",
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        -2000,
+        240
+      ],
+      "id": "7c6d1a44-d977-43bb-af2c-0d90074db6c5",
+      "name": "NG-Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "PERPLEXITY_API_CREDENTIAL_ID",
+          "name": "Perplexity account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Post-Comment",
+        "formDescription": "Post Description: Generate a comment from a post on LinkedIn",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name:",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Surname:",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Submitted Article:",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "My Input if Any:",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Date:",
+              "fieldType": "date"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -3376,
+        1728
+      ],
+      "id": "0bff7c7b-1d76-4979-9efa-31c0ba3fe316",
+      "name": "Comment Generator",
+      "webhookId": "WEBHOOK_ID_COMMENT_GENERATOR"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 736,
+        "width": 2800,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4032,
+        -320
+      ],
+      "id": "793617b7-cc6b-43c4-9f21-81ce2ad5f725",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "NG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Claude 4 Sonnet1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CG Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AG Agent": {
+      "main": [
+        [
+          {
+            "node": "AG-Eliminate Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn: Article Generator": {
+      "main": [
+        [
+          {
+            "node": "Image Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Image 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Image 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image 1": {
+      "main": [
+        [
+          {
+            "node": "Upload  - LinkedIn Image Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image 2": {
+      "main": [
+        [
+          {
+            "node": "Upload  - LinkedIn Image Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image 3": {
+      "main": [
+        [
+          {
+            "node": "Upload  - LinkedIn Image Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Generator": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Eliminate Markdown": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: Article Generator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parse Article Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Article Content": {
+      "main": [
+        [
+          {
+            "node": "AG-Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AG-WI Research Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Claude 4 Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AG Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AG-WI Claude 4 Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AG-Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Hacker News": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Generator": {
+      "main": [
+        [
+          {
+            "node": "AG Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AG-Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Merge": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: Comment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-Merge": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: Article",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG - WI Research Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-WI Claude 4 Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "CG-Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Hacker News": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG Agent": {
+      "main": [
+        [
+          {
+            "node": "CG-Eliminate Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-Eliminate Markdown": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: Comment Generator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parse Comment Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Comment Content": {
+      "main": [
+        [
+          {
+            "node": "CG-Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AG-GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AG-WI-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AG-WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CG-WI-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "CG - WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "NG Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG Agent": {
+      "main": [
+        [
+          {
+            "node": "NG-Eliminate Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-GPT 4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "NG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Claude 4 Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "NG Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "NG-WI Research Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-WI-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-WI Claude 4 Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "NG-Eliminate Markdown": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: Latest News Generator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Parse News Feed Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse News Feed Content": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn: News Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Hacker News": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Tavily": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NG-Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "NG-WI Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Comment Generator": {
+      "main": [
+        [
+          {
+            "node": "CG-Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "CG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "34fad357-222b-43b7-a3e0-94fbf5ad5db6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0afee67a43aa0aad22eb9ddd8f779b9a43bca0ea05dd522204b5934c7d374e2c"
+  },
+  "id": "4RllDdpkKHl4KzoT",
+  "tags": []
+}
